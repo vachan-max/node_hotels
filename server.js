@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+
 const db = require('./db.js');  // Import the DB connection
+const mongoose = require('mongoose');  // Import Mongoose
+require('dotenv').config();  // Load environment variables from .env file
 
-
+const port = process.env.PORT || 3000;  // Use the port from environment variables or default to 3000
 // Middleware
 app.use(express.json());  // Parse JSON request bodies
 
