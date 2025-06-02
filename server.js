@@ -5,7 +5,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const passport = require('./auth.js');
 const bcrypt = require('bcrypt');
-
+const cors = require('cors');
+app.use(cors())
 
 
 const port = process.env.PORT || 3000;

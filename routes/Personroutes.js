@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Person = require('./../state/Person.js');  // Import the Person model
-const {authmiddlewear,generateToken}= require('./../jwt.js'); // Import authentication middleware
+const { authMiddleware,generateToken}= require('./../jwt.js'); // Import authentication middleware
 
-router.get('/',authmiddlewear, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
       const persons = await Person.find();
       res.status(200).json({ message: 'Person data fetched successfully', data: persons });
@@ -21,6 +21,7 @@ router.get('/',authmiddlewear, async (req, res) => {
         if (existingPerson) {
           return res.status(400).json({ message: 'Email already exists' });
         }
+        console.log(existingPerson)
     
         // If no person exists with that email, create the new person
         const newPerson = new Person(data);
@@ -28,6 +29,8 @@ router.get('/',authmiddlewear, async (req, res) => {
        const token = generateToken({ username: savedPerson.username });
 
         res.status(201).json({ message: 'Person created successfully', data: savedPerson ,token:token});
+         console.log(newPerson)
+         console.log(savedPerson)
       } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error creating person', error: err.message });
@@ -62,7 +65,7 @@ router.get('/',authmiddlewear, async (req, res) => {
     res.status(500).json({ message: "Login error", error: err.message });
   }
 });
-router.get('/profile', authmiddlewear, async (req, res) => {
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id; // ✅ Extract the ID from decoded token payload
     const user = await Person.findById(userId);
@@ -72,6 +75,7 @@ router.get('/profile', authmiddlewear, async (req, res) => {
     }
 
     res.status(200).json({ message: 'Profile fetched successfully', data: user });
+  
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Profile fetch error", error: err.message });

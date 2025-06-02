@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const authmiddlewear = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -24,4 +24,4 @@ const generateToken = (userdata) => {
     return jwt.sign(userdata, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
-module.exports = { authmiddlewear, generateToken };
+module.exports = {  authMiddleware, generateToken };
